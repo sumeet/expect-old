@@ -6,14 +6,21 @@ class ExpectationError(Exception):
 
 
 def new_expecto(**kwargs):
-    return lambda expect_args: Expecto(expect_args, **kwargs)
+    return lambda arg: Expecto(arg, **kwargs)
 
 
 class Expecto:
 
-    def __init__(self, expect_args, **methods):
+    def __init__(self, arg, **methods):
+        self._arg = arg
         for name, method in methods.iteritems():
-            vars(self)[name] = partial(method, expect_args)
+            vars(self)[name] = partial(method, arg)
 
     def stub(self, arg_name):
+        def _(*args):
+            raise ExpectationError
+        self._arg.classmethod = staticmethod(_)
+        return self
+
+    def with_(self, *args, **kwargs):
         return
