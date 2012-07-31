@@ -21,3 +21,7 @@ class ExpectoTest(unittest.TestCase):
         expecto(MyClass).stub('classmethod').with_(1)
         with expect.raises(ExpectationError):
             MyClass.classmethod(2)
+
+
+if __name__ == '__main__':
+    unittest.main()

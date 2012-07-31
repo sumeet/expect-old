@@ -5,8 +5,8 @@ class ExpectationError(Exception):
     pass
 
 
-def new_expecto(**kwargs):
-    return lambda arg: Expecto(arg, **kwargs)
+def new_expecto(**methods):
+    return lambda arg: Expecto(arg, **methods)
 
 
 class Expecto:
