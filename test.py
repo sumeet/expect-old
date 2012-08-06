@@ -1,3 +1,4 @@
+import doctest
 import unittest
 
 from expecter import expect
@@ -68,6 +69,19 @@ class ExpectTest(unittest.TestCase):
 
     def test_repr_without_argument_looks_ok(self):
         expect(repr(self.expect)) == 'expect'
+
+
+class ReadmeTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.doctest_results = doctest.testfile('README.markdown')
+
+    def test_contains_tests(self):
+        expect(self.doctest_results.attempted) > 0
+
+    def test_does_not_fail(self):
+        expect(self.doctest_results.failed) == 0
 
 
 if __name__ == '__main__':
