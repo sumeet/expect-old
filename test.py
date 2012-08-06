@@ -15,6 +15,9 @@ class ExpectoTest(unittest.TestCase):
     def setUp(self):
         self.expecto = new_expecto()
 
+    def tearDown(self):
+        self.expecto.reset()
+
     def test_delegates_to_eq(self):
         assert_equal = Mock(name='assert_equal')
         expecto = new_expecto(__eq__=assert_equal)

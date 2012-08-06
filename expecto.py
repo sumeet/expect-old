@@ -11,6 +11,7 @@ def new_expecto(**methods):
 Args = namedtuple('Args', 'args kwargs')
 
 
+# XXX: Only old style classes can delegate magic methods with __getattr__.
 class Expecto:
 
     def __init__(self, **methods):
@@ -21,11 +22,10 @@ class Expecto:
         return self
 
     def stub(self, arg_name):
-        self._expectation = StubExpectation(self._argument, arg_name)
-        return self
+        self._expectation = new_stub_expectation(self._argument, arg_name)
 
     def should_receive(self, arg_name):
-        self._expectation = MockExpectation(self._argument, arg_name)
+        self._expectation = new_mock_expectation(self._argument, arg_name)
         return self
 
     def with_(self, *args, **kwargs):
@@ -95,5 +95,5 @@ class VerifiesMocks(object):
         stub.assert_called_once_with_args()
 
 
-StubExpectation = lambda obj, name: Stub(obj, name, VerifiesStubs)
-MockExpectation = lambda obj, name: Stub(obj, name, VerifiesMocks)
+new_stub_expectation = lambda obj, name: Stub(obj, name, VerifiesStubs)
+new_mock_expectation = lambda obj, name: Stub(obj, name, VerifiesMocks)
