@@ -16,30 +16,30 @@ class Expect:
 
     def __init__(self, **methods):
         self._methods = methods
+        self._expectations = []
 
     def __call__(self, argument):
         self._argument = argument
         return self
 
     def stub(self, arg_name):
-        self._expectation = new_stub_expectation(self._argument, arg_name)
+        expectation = new_stub_expectation(self._argument, arg_name)
+        self._expectations.append(expectation)
+        return expectation
 
     def should_receive(self, arg_name):
-        self._expectation = new_mock_expectation(self._argument, arg_name)
-        return self
-
-    def with_(self, *args, **kwargs):
-        self._expectation.set_args(*args, **kwargs)
-        return self
-
-    def and_return(self, return_value):
-        self._expectation.set_return_value(return_value)
+        expectation = new_mock_expectation(self._argument, arg_name)
+        self._expectations.append(expectation)
+        return expectation
 
     def verify(self):
-        self._expectation.verify()
+        for expectation in self._expectations:
+            expectation.verify()
 
     def reset(self):
-        self._expectation.reset()
+        for expectation in self._expectations:
+            expectation.reset()
+        del self._expectations[:]
 
     def __getattr__(self, name):
         return partial(self._methods[name], self._argument)
@@ -59,11 +59,12 @@ class Expectation(object):
         self._stub = self._patcher.start()
         self._verifier = verifier
 
-    def set_return_value(self, value):
-        self._stub.return_value = value
-
-    def set_args(self, *args, **kwargs):
+    def with_(self, *args, **kwargs):
         self._with_args = Args(args, kwargs)
+        return self
+
+    def and_return(self, return_value):
+        self._stub.return_value = return_value
 
     def assert_called_once_with_args(self):
         self._stub.assert_called_once_with(*self._with_args.args,

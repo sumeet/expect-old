@@ -44,6 +44,18 @@ class ExpectTest(unittest.TestCase):
         with expect.raises(AssertionError):
             self.expect.verify()
 
+    def test_verifies_multiple_expectations(self):
+        class AnotherClass(object):
+            @classmethod
+            def classmethod(cls): pass
+        (self.expect(self.MyClass).should_receive('classmethod').with_(1)
+                                   .and_return(2))
+        (self.expect(AnotherClass).should_receive('classmethod').with_(2)
+                                   .and_return(2))
+        AnotherClass.classmethod(2)
+        with expect.raises(AssertionError):
+            self.expect.verify()
+
     def test_stubs_and_resets_values(self):
         original_value = self.MyClass.classmethod
         self.expect(self.MyClass).stub('classmethod').with_(1).and_return(2)
