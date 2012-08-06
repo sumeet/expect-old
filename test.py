@@ -41,6 +41,13 @@ class ExpectoTest(unittest.TestCase):
         with expect.raises(AssertionError):
             self.expecto.verify()
 
+    def test_stubs_and_resets_values(self):
+        original_value = self.MyClass.classmethod
+        self.expecto(self.MyClass).stub('classmethod').with_(1).and_return(2)
+        expect(self.MyClass.classmethod) != original_value
+        self.expecto.reset()
+        expect(self.MyClass.classmethod) == original_value
+
     def test_repr_includes_argument(self):
         expect(repr(self.expecto('a'))) == "expect('a')"
 

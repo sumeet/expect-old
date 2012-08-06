@@ -38,6 +38,9 @@ class Expecto:
     def verify(self):
         self._expectation.verify()
 
+    def reset(self):
+        self._expectation.reset()
+
     def __getattr__(self, name):
         return partial(self._methods[name], self._argument)
 
@@ -72,6 +75,9 @@ class Stub(object):
     @property
     def was_called(self):
         return self._stub.called
+
+    def reset(self):
+        self._patcher.stop()
 
 
 class VerifiesStubs(object):
