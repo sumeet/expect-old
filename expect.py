@@ -4,15 +4,15 @@ from functools import partial
 from mock import patch
 
 
-def new_expecto(**methods):
-    return Expecto(**methods)
+def new_expect(**methods):
+    return Expect(**methods)
 
 
 Args = namedtuple('Args', 'args kwargs')
 
 
 # XXX: Only old style classes can delegate magic methods with __getattr__.
-class Expecto:
+class Expect:
 
     def __init__(self, **methods):
         self._methods = methods
