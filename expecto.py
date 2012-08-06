@@ -52,7 +52,7 @@ class Expecto:
     _argument = _no_argument
 
 
-class Stub(object):
+class Expectation(object):
 
     def __init__(self, obj, name, verifier):
         self._patcher = patch.object(obj, name)
@@ -95,5 +95,5 @@ class VerifiesMocks(object):
         stub.assert_called_once_with_args()
 
 
-new_stub_expectation = lambda obj, name: Stub(obj, name, VerifiesStubs)
-new_mock_expectation = lambda obj, name: Stub(obj, name, VerifiesMocks)
+new_stub_expectation = lambda obj, name: Expectation(obj, name, VerifiesStubs)
+new_mock_expectation = lambda obj, name: Expectation(obj, name, VerifiesMocks)
