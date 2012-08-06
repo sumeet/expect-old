@@ -41,6 +41,13 @@ class Expecto:
     def __getattr__(self, name):
         return partial(self._methods[name], self._argument)
 
+    def __repr__(self):
+        return ('expect(%r)' % self._argument if self._argument is not
+                self._no_argument else 'expect')
+
+    class _no_argument(object): pass
+    _argument = _no_argument
+
 
 class Stub(object):
 

@@ -41,6 +41,12 @@ class ExpectoTest(unittest.TestCase):
         with expect.raises(AssertionError):
             self.expecto.verify()
 
+    def test_repr_includes_argument(self):
+        expect(repr(self.expecto('a'))) == "expect('a')"
+
+    def test_repr_without_argument_looks_ok(self):
+        expect(repr(self.expecto)) == 'expect'
+
 
 if __name__ == '__main__':
     unittest.main()
