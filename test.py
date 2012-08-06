@@ -17,7 +17,8 @@ class ExpectTest(unittest.TestCase):
 
     def setUp(self):
         global expect
-        expect = new_expect(__eq__=self.assertEquals, raised=self.assertRaises,
+        expect = new_expect(__eq__=self.assertEquals,
+                            is_raised=self.assertRaises,
                             __ne__=self.assertNotEquals,
                             __gt__=self.assertGreater)
         self.expect = new_expect()
@@ -35,7 +36,7 @@ class ExpectTest(unittest.TestCase):
     def test_stub_with_wrong_argument_raises_exception(self):
         self.expect(self.MyClass).stub('classmethod').with_(1)
         self.MyClass.classmethod(2)
-        with expect(AssertionError).raised():
+        with expect(AssertionError).is_raised():
             self.expect.verify()
 
     def test_stub_returns_argument(self):
@@ -49,7 +50,7 @@ class ExpectTest(unittest.TestCase):
     def test_mock_expectation_raises_exception_if_not_called(self):
         (self.expect(self.MyClass).should_receive('classmethod').with_(1)
                                    .and_return(2))
-        with expect(AssertionError).raised():
+        with expect(AssertionError).is_raised():
             self.expect.verify()
 
     def test_verifies_multiple_expectations(self):
@@ -61,7 +62,7 @@ class ExpectTest(unittest.TestCase):
         (self.expect(AnotherClass).should_receive('classmethod').with_(2)
                                    .and_return(2))
         AnotherClass.classmethod(2)
-        with expect(AssertionError).raised():
+        with expect(AssertionError).is_raised():
             self.expect.verify()
 
     def test_stubs_and_resets_values(self):
