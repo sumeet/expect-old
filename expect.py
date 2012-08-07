@@ -4,11 +4,7 @@ from functools import partial
 from mock import patch
 
 
-def new_expect(**methods):
-    return Expect(**methods)
-
-
-Args = namedtuple('Args', 'args kwargs')
+new_expect = lambda **methods: Expect(**methods)
 
 
 # XXX: Only old style classes can delegate magic methods with __getattr__.
@@ -52,6 +48,9 @@ class Expect:
     _argument = _no_argument
 
 
+Args = namedtuple('Args', 'args kwargs')
+
+
 class Expectation(object):
 
     def __init__(self, obj, name, verifier):
@@ -81,6 +80,10 @@ class Expectation(object):
         self._patcher.stop()
 
 
+new_stub_expectation = lambda obj, name: Expectation(obj, name, VerifiesStubs)
+new_mock_expectation = lambda obj, name: Expectation(obj, name, VerifiesMocks)
+
+
 class VerifiesStubs(object):
 
     @classmethod
@@ -94,7 +97,3 @@ class VerifiesMocks(object):
     @classmethod
     def verify(cls, stub):
         stub.assert_called_once_with_args()
-
-
-new_stub_expectation = lambda obj, name: Expectation(obj, name, VerifiesStubs)
-new_mock_expectation = lambda obj, name: Expectation(obj, name, VerifiesMocks)
